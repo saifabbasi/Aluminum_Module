@@ -1,0 +1,1009 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>EVO Aluminum Costing System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  /* Layout: sectioned vertical scroll, each flow as a titled panel */
+  :root {
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --surface-alt: #F0EFEC;
+    --fg: #1A1917;
+    --fg-dim: #6B6860;
+    --fg-muted: #9C978E;
+    --border: #E2E0DA;
+    --accent: #2563EB;
+    --accent-light: #DBEAFE;
+    --accent-fg: #1E40AF;
+    --green: #16A34A;
+    --green-light: #DCFCE7;
+    --green-fg: #166534;
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --amber-fg: #92400E;
+    --red: #DC2626;
+    --red-light: #FEE2E2;
+    --red-fg: #991B1B;
+    --purple: #7C3AED;
+    --purple-light: #EDE9FE;
+    --purple-fg: #5B21B6;
+    --teal: #0D9488;
+    --teal-light: #CCFBF1;
+    --teal-fg: #115E59;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131210;
+      --surface: #1E1D1A;
+      --surface-alt: #2A2825;
+      --fg: #E8E6E1;
+      --fg-dim: #A09B91;
+      --fg-muted: #706B62;
+      --border: #3A3733;
+      --accent: #60A5FA;
+      --accent-light: #1E293B;
+      --accent-fg: #93C5FD;
+      --green: #4ADE80;
+      --green-light: #14271D;
+      --green-fg: #86EFAC;
+      --amber: #FBBF24;
+      --amber-light: #2A2210;
+      --amber-fg: #FCD34D;
+      --red: #F87171;
+      --red-light: #2A1515;
+      --red-fg: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-light: #1E1533;
+      --purple-fg: #C4B5FD;
+      --teal: #2DD4BF;
+      --teal-light: #0F2A26;
+      --teal-fg: #5EEAD4;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131210;
+    --surface: #1E1D1A;
+    --surface-alt: #2A2825;
+    --fg: #E8E6E1;
+    --fg-dim: #A09B91;
+    --fg-muted: #706B62;
+    --border: #3A3733;
+    --accent: #60A5FA;
+    --accent-light: #1E293B;
+    --accent-fg: #93C5FD;
+    --green: #4ADE80;
+    --green-light: #14271D;
+    --green-fg: #86EFAC;
+    --amber: #FBBF24;
+    --amber-light: #2A2210;
+    --amber-fg: #FCD34D;
+    --red: #F87171;
+    --red-light: #2A1515;
+    --red-fg: #FCA5A5;
+    --purple: #A78BFA;
+    --purple-light: #1E1533;
+    --purple-fg: #C4B5FD;
+    --teal: #2DD4BF;
+    --teal-light: #0F2A26;
+    --teal-fg: #5EEAD4;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    padding-inline: 16px;
+  }
+  * { box-sizing: border-box; }
+
+  .page-header {
+    max-width: 900px;
+    margin: 2rem auto 1rem;
+    text-align: center;
+  }
+  .page-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.25rem;
+    text-wrap: balance;
+  }
+  .page-header .subtitle {
+    color: var(--fg-dim);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .page-header .version {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-fg);
+    background: var(--accent-light);
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-top: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* Navigation tabs */
+  .tabs {
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--fg-dim);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tab:hover { background: var(--surface-alt); color: var(--fg); }
+  .tab.active {
+    background: var(--accent-light);
+    color: var(--accent-fg);
+    font-weight: 600;
+  }
+
+  /* Section panels */
+  .panel {
+    max-width: 900px;
+    margin: 1.25rem auto 2rem;
+    display: none;
+  }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.25rem;
+  }
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.01em;
+  }
+  .card .card-desc {
+    font-size: 0.85rem;
+    color: var(--fg-dim);
+    margin: 0 0 1.25rem;
+  }
+
+  /* SVG diagrams */
+  figure {
+    margin: 0;
+    overflow-x: auto;
+  }
+  figure svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  figcaption {
+    font-size: 0.78rem;
+    color: var(--fg-muted);
+    text-align: center;
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--fg-dim);
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Formula cards */
+  .formula-block {
+    background: var(--surface-alt);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .formula-block .op { color: var(--accent-fg); font-weight: 600; }
+  .formula-block .field { color: var(--green-fg); }
+  .formula-block .note { color: var(--fg-muted); font-style: italic; font-family: var(--font-body); font-size: 0.78rem; }
+  .formula-block .result { color: var(--amber-fg); font-weight: 600; }
+
+  /* Condition badges */
+  .cond {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .cond-yes { background: var(--green-light); color: var(--green-fg); }
+  .cond-no { background: var(--red-light); color: var(--red-fg); }
+  .cond-if { background: var(--amber-light); color: var(--amber-fg); }
+  .cond-new { background: var(--purple-light); color: var(--purple-fg); }
+
+  /* Field reference tables */
+  .field-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 0.75rem 0;
+  }
+  .field-table th {
+    text-align: left;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--fg-dim);
+  }
+  .field-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .field-table code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--surface-alt);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .field-table tr:last-child td { border-bottom: none; }
+
+  @media (max-width: 600px) {
+    .card { padding: 1rem; }
+    .tabs { gap: 2px; }
+    .tab { padding: 7px 12px; font-size: 0.78rem; }
+  }
+</style>
+
+<div class="page-header">
+  <h1>EVO Aluminum FIFO Costing System</h1>
+  <p class="subtitle">End-to-end flow — from container arrival to customer invoice</p>
+  <span class="version">EVO Products &amp; Services · NetSuite SuiteScript 2.1</span>
+</div>
+
+<div class="tabs" role="tablist">
+  <button class="tab active" role="tab" data-panel="overview" aria-selected="true">Overview</button>
+  <button class="tab" role="tab" data-panel="inbound">Inbound Flow</button>
+  <button class="tab" role="tab" data-panel="costing">Cost Formula</button>
+  <button class="tab" role="tab" data-panel="outbound">Outbound Flow</button>
+  <button class="tab" role="tab" data-panel="container">Container Ops</button>
+  <button class="tab" role="tab" data-panel="mapping">Line Mapping</button>
+  <button class="tab" role="tab" data-panel="fields">Field Reference</button>
+</div>
+
+<!-- ==================== OVERVIEW ==================== -->
+<div class="panel active" id="overview">
+  <div class="card">
+    <h2>System Overview</h2>
+    <p class="card-desc">The full lifecycle of aluminum extrusions — from Hanwood shipment to customer invoice with FIFO cost tracking.</p>
+    <figure>
+      <svg viewBox="0 0 860 520" role="img" aria-label="End-to-end system overview showing Container to PO to Item Receipt to FIFO Layer to SO to Invoice flow">
+        <defs>
+          <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="currentColor"/></marker>
+          <marker id="ah-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--accent)"/></marker>
+          <marker id="ah-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--green)"/></marker>
+          <marker id="ah-purple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--purple)"/></marker>
+        </defs>
+
+        <!-- Row labels -->
+        <text x="16" y="52" font-size="10" fill="var(--fg-muted)" font-weight="600" letter-spacing="0.08em" font-family="var(--font-mono)">INBOUND</text>
+        <text x="16" y="222" font-size="10" fill="var(--fg-muted)" font-weight="600" letter-spacing="0.08em" font-family="var(--font-mono)">COSTING</text>
+        <text x="16" y="382" font-size="10" fill="var(--fg-muted)" font-weight="600" letter-spacing="0.08em" font-family="var(--font-mono)">OUTBOUND</text>
+
+        <!-- Inbound row -->
+        <!-- Hanwood -->
+        <rect x="90" y="30" width="120" height="56" rx="8" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="150" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Hanwood</text>
+        <text x="150" y="70" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Vendor (China)</text>
+
+        <line x1="210" y1="58" x2="258" y2="58" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="234" y="50" text-anchor="middle" font-size="8" fill="var(--fg-muted)">ships</text>
+
+        <!-- Container -->
+        <rect x="260" y="30" width="120" height="56" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="320" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-fg)">Container</text>
+        <text x="320" y="70" text-anchor="middle" font-size="9" fill="var(--fg-dim)">custrecord_f3_al_*</text>
+
+        <line x1="380" y1="58" x2="428" y2="58" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="404" y="50" text-anchor="middle" font-size="8" fill="var(--fg-muted)">1:N POs</text>
+
+        <!-- Purchase Order -->
+        <rect x="430" y="30" width="120" height="56" rx="8" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="490" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Purchase Order</text>
+        <text x="490" y="70" text-anchor="middle" font-size="9" fill="var(--fg-dim)">custbody_f3_al_container</text>
+
+        <line x1="550" y1="58" x2="598" y2="58" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="574" y="50" text-anchor="middle" font-size="8" fill="var(--fg-muted)">receive</text>
+
+        <!-- Item Receipt -->
+        <rect x="600" y="30" width="120" height="56" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="660" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="var(--green-fg)">Item Receipt</text>
+        <text x="660" y="70" text-anchor="middle" font-size="9" fill="var(--fg-dim)">creates FIFO layers</text>
+
+        <!-- Down arrow from Item Receipt to FIFO -->
+        <line x1="660" y1="86" x2="660" y2="185" stroke="var(--green)" stroke-width="1.5" marker-end="url(#ah-green)"/>
+        <text x="670" y="140" font-size="8" fill="var(--fg-muted)">afterSubmit</text>
+
+        <!-- Costing row -->
+        <!-- LME -->
+        <rect x="90" y="195" width="100" height="50" rx="8" fill="var(--purple-light)" stroke="var(--purple)" stroke-width="1.5"/>
+        <text x="140" y="216" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple-fg)">LME Spot</text>
+        <text x="140" y="230" text-anchor="middle" font-size="9" fill="var(--fg-dim)">$/lb from API</text>
+
+        <line x1="190" y1="220" x2="248" y2="220" stroke="var(--purple)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah-purple)"/>
+
+        <!-- EXW calc box -->
+        <rect x="250" y="188" width="160" height="64" rx="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="330" y="210" text-anchor="middle" font-size="11" font-weight="700" fill="var(--amber-fg)">EXW Calculation</text>
+        <text x="330" y="224" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">LME + MJP + Conversion</text>
+        <text x="330" y="237" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">+ Fabrication + Billet</text>
+
+        <line x1="410" y1="220" x2="458" y2="220" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+
+        <!-- DDP calc box -->
+        <rect x="460" y="188" width="160" height="64" rx="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="540" y="210" text-anchor="middle" font-size="11" font-weight="700" fill="var(--amber-fg)">DDP Calculation</text>
+        <text x="540" y="224" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">Duties on Entered Value</text>
+        <text x="540" y="237" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">+ Freight + Misc</text>
+
+        <line x1="620" y1="220" x2="648" y2="220" stroke="var(--green)" stroke-width="1.5" marker-end="url(#ah-green)"/>
+
+        <!-- FIFO Layer -->
+        <rect x="650" y="188" width="120" height="64" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+        <text x="710" y="210" text-anchor="middle" font-size="11" font-weight="700" fill="var(--green-fg)">FIFO Layer</text>
+        <text x="710" y="224" text-anchor="middle" font-size="9" fill="var(--fg-dim)">custrecord_f3_al_*</text>
+        <text x="710" y="237" text-anchor="middle" font-size="9" fill="var(--fg-dim)">qty + DDP cost</text>
+
+        <!-- Down arrow from FIFO to SO -->
+        <line x1="710" y1="252" x2="710" y2="350" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ah-blue)"/>
+        <text x="720" y="305" font-size="8" fill="var(--fg-muted)">consumes</text>
+
+        <!-- Outbound row -->
+        <!-- Customer -->
+        <rect x="90" y="355" width="120" height="56" rx="8" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="150" y="379" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Customer</text>
+        <text x="150" y="395" text-anchor="middle" font-size="9" fill="var(--fg-dim)">margin % per item</text>
+
+        <line x1="210" y1="383" x2="258" y2="383" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="234" y="375" text-anchor="middle" font-size="8" fill="var(--fg-muted)">places</text>
+
+        <!-- Sales Order -->
+        <rect x="260" y="355" width="130" height="56" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="325" y="379" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-fg)">Sales Order</text>
+        <text x="325" y="395" text-anchor="middle" font-size="9" fill="var(--fg-dim)">custcol_f3_al_container</text>
+
+        <line x1="390" y1="383" x2="438" y2="383" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="414" y="375" text-anchor="middle" font-size="8" fill="var(--fg-muted)">fulfill</text>
+
+        <!-- Invoice -->
+        <rect x="440" y="355" width="130" height="56" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="505" y="379" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-fg)">Invoice</text>
+        <text x="505" y="395" text-anchor="middle" font-size="9" fill="var(--fg-dim)">custcol_f3_al_container</text>
+
+        <line x1="570" y1="383" x2="648" y2="383" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#ah-blue)"/>
+        <text x="609" y="375" text-anchor="middle" font-size="8" fill="var(--fg-muted)">FIFO consume</text>
+
+        <!-- FIFO Layer again (outbound side) -->
+        <rect x="650" y="355" width="120" height="56" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="710" y="379" text-anchor="middle" font-size="11" font-weight="600" fill="var(--green-fg)">FIFO Layer</text>
+        <text x="710" y="395" text-anchor="middle" font-size="9" fill="var(--fg-dim)">qty decremented</text>
+
+        <!-- Sell Price output -->
+        <rect x="260" y="440" width="310" height="46" rx="8" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="415" y="462" text-anchor="middle" font-size="10" font-weight="600" fill="currentColor">Sell Price = DDP Cost × (1 + EXW Margin%) × (1 + DDP Margin%)</text>
+        <text x="415" y="476" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">Margins: EXW varies by customer/item · DDP fixed 7%</text>
+
+        <line x1="325" y1="411" x2="325" y2="438" stroke="var(--fg-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="505" y1="411" x2="505" y2="438" stroke="var(--fg-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+      <figcaption>Complete lifecycle: containers arrive inbound, costs are calculated per FIFO layer, then consumed on outbound sales</figcaption>
+    </figure>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--accent-light);border:1px solid var(--accent)"></div>Transaction records</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--green-light);border:1px solid var(--green)"></div>FIFO layers (cost store)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--amber-light);border:1px solid var(--amber)"></div>Cost calculations</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--purple-light);border:1px solid var(--purple)"></div>External data feeds</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== INBOUND FLOW ==================== -->
+<div class="panel" id="inbound">
+  <div class="card">
+    <h2>Inbound Flow — Container to FIFO Layer</h2>
+    <p class="card-desc">Triggered when goods arrive. Each Item Receipt line creates a FIFO cost layer capturing the full landed cost at that point in time.</p>
+    <figure>
+      <svg viewBox="0 0 840 580" role="img" aria-label="Inbound flow from container creation through PO, item receipt, to FIFO layer creation with all triggers and conditions">
+        <defs>
+          <marker id="ah2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="currentColor"/></marker>
+          <marker id="ah2-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--green)"/></marker>
+          <marker id="ah2-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--red)"/></marker>
+        </defs>
+
+        <!-- Step 1: Container Created -->
+        <rect x="30" y="20" width="180" height="60" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="120" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-fg)">1. Container Created</text>
+        <text x="120" y="60" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Manual entry with shipping details</text>
+
+        <line x1="120" y1="80" x2="120" y2="108" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah2)"/>
+
+        <!-- Container fields -->
+        <rect x="30" y="110" width="180" height="100" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="42" y="128" font-size="9" font-weight="600" fill="var(--fg-dim)">CONTAINER FIELDS</text>
+        <text x="42" y="146" font-size="9" fill="currentColor" font-family="var(--font-mono)">container_number</text>
+        <text x="42" y="161" font-size="9" fill="currentColor" font-family="var(--font-mono)">total_freight</text>
+        <text x="42" y="176" font-size="9" fill="currentColor" font-family="var(--font-mono)">total_misc_charges</text>
+        <text x="42" y="191" font-size="9" fill="currentColor" font-family="var(--font-mono)">total_weight</text>
+
+        <line x1="210" y1="160" x2="278" y2="160" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah2)"/>
+        <text x="244" y="153" text-anchor="middle" font-size="8" fill="var(--fg-muted)">linked via</text>
+
+        <!-- Step 2: POs Created -->
+        <rect x="280" y="20" width="190" height="60" rx="8" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="375" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">2. POs Created</text>
+        <text x="375" y="60" text-anchor="middle" font-size="9" fill="var(--fg-dim)">1 per customer, linked to Container</text>
+
+        <line x1="375" y1="80" x2="375" y2="108" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah2)"/>
+
+        <!-- PO fields -->
+        <rect x="280" y="110" width="190" height="120" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="292" y="128" font-size="9" font-weight="600" fill="var(--fg-dim)">PO BODY FIELDS</text>
+        <text x="292" y="146" font-size="9" fill="currentColor" font-family="var(--font-mono)">custbody_f3_al_container</text>
+        <text x="292" y="161" font-size="9" fill="currentColor" font-family="var(--font-mono)">custbody_f3_al_lme_rate</text>
+        <text x="292" y="176" font-size="9" fill="currentColor" font-family="var(--font-mono)">custbody_f3_al_mjp</text>
+        <text x="292" y="191" font-size="9" fill="currentColor" font-family="var(--font-mono)">custbody_f3_al_freight_share</text>
+        <text x="292" y="206" font-size="9" fill="currentColor" font-family="var(--font-mono)">custbody_f3_al_misc_share</text>
+
+        <!-- Distribute Freight button -->
+        <rect x="280" y="248" width="190" height="46" rx="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="375" y="268" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber-fg)">⚡ Distribute Freight</text>
+        <text x="375" y="282" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">Button on Container record</text>
+
+        <line x1="375" y1="230" x2="375" y2="246" stroke="var(--amber)" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- Arrow from Distribute to description -->
+        <line x1="470" y1="271" x2="530" y2="271" stroke="var(--amber)" stroke-width="1" marker-end="url(#ah2)"/>
+        <rect x="532" y="248" width="260" height="46" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="544" y="266" font-size="9" fill="currentColor">Allocates freight &amp; misc by weight share</text>
+        <text x="544" y="280" font-size="9" fill="currentColor">across all linked POs (load + save cycle)</text>
+
+        <!-- Step 3: Item Receipt -->
+        <rect x="280" y="320" width="190" height="60" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="375" y="344" text-anchor="middle" font-size="11" font-weight="700" fill="var(--green-fg)">3. Item Receipt</text>
+        <text x="375" y="360" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Receive against PO</text>
+
+        <line x1="375" y1="294" x2="375" y2="318" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah2)"/>
+        <text x="385" y="310" font-size="8" fill="var(--fg-muted)">receive</text>
+
+        <!-- UE trigger label -->
+        <rect x="490" y="335" width="120" height="24" rx="4" fill="var(--purple-light)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="550" y="351" text-anchor="middle" font-size="9" font-weight="600" fill="var(--purple-fg)">UE afterSubmit</text>
+        <line x1="470" y1="350" x2="488" y2="350" stroke="var(--purple)" stroke-width="1"/>
+
+        <!-- Arrow down to FIFO creation -->
+        <line x1="375" y1="380" x2="375" y2="408" stroke="var(--green)" stroke-width="1.5" marker-end="url(#ah2-g)"/>
+
+        <!-- Decision: Is aluminum item? -->
+        <polygon points="375,410 445,445 375,480 305,445" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="375" y="442" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor">Is Aluminum</text>
+        <text x="375" y="454" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor">Item?</text>
+
+        <!-- Yes path -->
+        <line x1="375" y1="480" x2="375" y2="508" stroke="var(--green)" stroke-width="1.5" marker-end="url(#ah2-g)"/>
+        <text x="385" y="498" font-size="9" font-weight="600" fill="var(--green)">YES</text>
+
+        <!-- No path -->
+        <line x1="445" y1="445" x2="500" y2="445" stroke="var(--red)" stroke-width="1.5" marker-end="url(#ah2-r)"/>
+        <text x="472" y="438" font-size="9" font-weight="600" fill="var(--red)">NO</text>
+        <text x="510" y="449" font-size="9" fill="var(--fg-dim)">Skip — standard NS costing</text>
+
+        <!-- Step 4: FIFO Layer Created -->
+        <rect x="260" y="510" width="230" height="56" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+        <text x="375" y="534" text-anchor="middle" font-size="11" font-weight="700" fill="var(--green-fg)">4. FIFO Layer Created</text>
+        <text x="375" y="550" text-anchor="middle" font-size="9" fill="var(--fg-dim)">One layer per item line, captures DDP cost</text>
+
+        <!-- FIFO layer fields on the side -->
+        <rect x="550" y="400" width="240" height="155" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="562" y="418" font-size="9" font-weight="600" fill="var(--fg-dim)">FIFO LAYER STORES</text>
+        <text x="562" y="436" font-size="9" fill="currentColor" font-family="var(--font-mono)">item, qty_remaining</text>
+        <text x="562" y="451" font-size="9" fill="currentColor" font-family="var(--font-mono)">lme_rate, mjp_rate</text>
+        <text x="562" y="466" font-size="9" fill="currentColor" font-family="var(--font-mono)">conversion_cost</text>
+        <text x="562" y="481" font-size="9" fill="currentColor" font-family="var(--font-mono)">exw_cost_per_lb</text>
+        <text x="562" y="496" font-size="9" fill="currentColor" font-family="var(--font-mono)">freight_per_lb, misc_per_lb</text>
+        <text x="562" y="511" font-size="9" fill="currentColor" font-family="var(--font-mono)">duty_rate, sec232_amt</text>
+        <text x="562" y="526" font-size="9" fill="currentColor" font-family="var(--font-mono)">ddp_cost_per_lb</text>
+        <text x="562" y="541" font-size="9" fill="var(--purple-fg)" font-family="var(--font-mono)">fabrication_cost  ← NEW</text>
+
+        <line x1="490" y1="538" x2="548" y2="500" stroke="var(--fg-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+      <figcaption>Each Item Receipt triggers a UserEvent script that creates a FIFO layer per aluminum line item</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- ==================== COST FORMULA ==================== -->
+<div class="panel" id="costing">
+  <div class="card">
+    <h2>EXW Cost Formula</h2>
+    <p class="card-desc">Ex-Works cost per pound, calculated at the item level on each PO line.</p>
+
+    <div class="formula-block">
+      <span class="result">EXW $/lb</span> <span class="op">=</span><br>
+      &nbsp;&nbsp;<span class="field">LME 3-Month</span> <span class="note">($/lb, locked at PO creation from API)</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">MJP Premium</span> <span class="note">($/lb, Midwest Journal Premium)</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Billet Surcharge</span> <span class="note">($/lb, item-level field)</span> <span class="cond cond-new">NEW</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Conversion Cost</span> <span class="note">($/lb, from Hanwood price list)</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Fabrication Cost</span> <span class="op">÷</span> <span class="field">Weight per Piece</span> <span class="note">($/piece → $/lb)</span> <span class="cond cond-new">NEW</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>DDP Cost Formula</h2>
+    <p class="card-desc">Delivered Duty Paid — full landed cost including tariffs, duties, freight and misc charges.</p>
+
+    <div class="formula-block">
+      <span class="result">Entered Value</span> <span class="op">=</span> <span class="field">Hanwood Invoice Price</span> <span class="op">×</span> <span class="field">Qty Received</span><br>
+      <span class="note">⚠ Duties are calculated on Entered Value (vendor price), NOT on calculated EXW</span><br><br>
+
+      <span class="result">DDP $/lb</span> <span class="op">=</span> <span class="field">EXW $/lb</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Section 232</span> <span class="op">=</span> <span class="field">Entered Value</span> <span class="op">×</span> 25% <span class="op">÷</span> <span class="field">Total Weight</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Duty</span> <span class="op">=</span> <span class="field">Entered Value</span> <span class="op">×</span> <span class="field">Duty Rate%</span> <span class="op">÷</span> <span class="field">Total Weight</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Freight $/lb</span> <span class="note">(container freight allocated by weight share)</span><br>
+      &nbsp;&nbsp;<span class="op">+</span> <span class="field">Misc $/lb</span> <span class="note">(customs broker fees + other charges by weight)</span>
+    </div>
+
+    <h2 style="margin-top:1.25rem">Duty Rate Classifications</h2>
+    <table class="field-table">
+      <thead><tr><th>Profile Type</th><th>HTS Code</th><th>Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Solid</td><td><code>7604.10.5000</code></td><td>5.0%</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Hollow</td><td><code>7604.21.0090</code></td><td>1.5%</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Fabricated</td><td><code>7610.10.0000</code></td><td>5.7%</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Other Profile</td><td><code>7604.29.1010</code></td><td>5.0%</td><td><span class="cond cond-new">PENDING</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Sell Price Formula</h2>
+    <p class="card-desc">Two-tier margin applied to DDP cost — EXW margin varies per customer/item, DDP margin fixed.</p>
+
+    <div class="formula-block">
+      <span class="result">Sell Price $/lb</span> <span class="op">=</span><br>
+      &nbsp;&nbsp;<span class="field">DDP $/lb</span><br>
+      &nbsp;&nbsp;<span class="op">×</span> (1 <span class="op">+</span> <span class="field">EXW Margin%</span>) <span class="note">(varies: ~30-57% per customer/item)</span><br>
+      &nbsp;&nbsp;<span class="op">×</span> (1 <span class="op">+</span> <span class="field">DDP Margin%</span>) <span class="note">(fixed: 7%)</span><br><br>
+
+      <span class="result">Line Total</span> <span class="op">=</span> <span class="field">Sell Price $/lb</span> <span class="op">×</span> <span class="field">Weight per Piece</span> <span class="op">×</span> <span class="field">Qty</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== OUTBOUND FLOW ==================== -->
+<div class="panel" id="outbound">
+  <div class="card">
+    <h2>Outbound Flow — SO to Invoice with FIFO Consumption</h2>
+    <p class="card-desc">When an SO is saved, the UE script looks up the latest FIFO layer for each item and calculates the sell price. Invoicing consumes layer quantity.</p>
+    <figure>
+      <svg viewBox="0 0 840 460" role="img" aria-label="Outbound flow showing SO creation, price calculation from FIFO layers, and invoice FIFO consumption">
+        <defs>
+          <marker id="ah3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="currentColor"/></marker>
+          <marker id="ah3-b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--accent)"/></marker>
+        </defs>
+
+        <!-- SO Created -->
+        <rect x="30" y="30" width="170" height="56" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="115" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-fg)">Sales Order</text>
+        <text x="115" y="70" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Customer places order</text>
+
+        <!-- UE trigger -->
+        <rect x="30" y="100" width="170" height="24" rx="4" fill="var(--purple-light)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="115" y="116" text-anchor="middle" font-size="9" font-weight="600" fill="var(--purple-fg)">UE beforeSubmit (SO)</text>
+        <line x1="115" y1="86" x2="115" y2="98" stroke="var(--purple)" stroke-width="1"/>
+
+        <line x1="115" y1="124" x2="115" y2="152" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- For each line -->
+        <rect x="30" y="154" width="170" height="40" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="115" y="174" text-anchor="middle" font-size="10" font-weight="600" fill="currentColor">For each item line</text>
+        <text x="115" y="186" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">iterate sublist</text>
+
+        <line x1="200" y1="174" x2="268" y2="174" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- Lookup FIFO -->
+        <rect x="270" y="154" width="190" height="40" rx="6" fill="var(--green-light)" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="365" y="174" text-anchor="middle" font-size="10" font-weight="600" fill="var(--green-fg)">Lookup FIFO Layers</text>
+        <text x="365" y="186" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">by item + container (line-level)</text>
+
+        <line x1="365" y1="194" x2="365" y2="222" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- Get DDP cost -->
+        <rect x="270" y="224" width="190" height="40" rx="6" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="365" y="244" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber-fg)">Get DDP Cost $/lb</text>
+        <text x="365" y="256" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">from oldest layer with qty (FIFO)</text>
+
+        <line x1="365" y1="264" x2="365" y2="292" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- Apply margin -->
+        <rect x="270" y="294" width="190" height="50" rx="6" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="365" y="314" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber-fg)">Apply Margins</text>
+        <text x="365" y="329" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">EXW margin (customer/item)</text>
+        <text x="365" y="340" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">DDP margin (7% fixed)</text>
+
+        <line x1="365" y1="344" x2="365" y2="372" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- Set line price -->
+        <rect x="270" y="374" width="190" height="40" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="365" y="394" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent-fg)">Set Line Rate (price)</text>
+        <text x="365" y="406" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">calculated sell price on SO line</text>
+
+        <!-- Right side: Invoice flow -->
+        <rect x="570" y="30" width="170" height="56" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="655" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-fg)">Invoice</text>
+        <text x="655" y="70" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Created from SO</text>
+
+        <rect x="570" y="100" width="170" height="24" rx="4" fill="var(--purple-light)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="655" y="116" text-anchor="middle" font-size="9" font-weight="600" fill="var(--purple-fg)">UE afterSubmit (INV)</text>
+        <line x1="655" y1="86" x2="655" y2="98" stroke="var(--purple)" stroke-width="1"/>
+
+        <line x1="655" y1="124" x2="655" y2="152" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- FIFO consume -->
+        <rect x="570" y="154" width="170" height="50" rx="6" fill="var(--green-light)" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="655" y="174" text-anchor="middle" font-size="10" font-weight="600" fill="var(--green-fg)">Consume FIFO Layers</text>
+        <text x="655" y="189" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">decrement qty_remaining</text>
+
+        <line x1="655" y1="204" x2="655" y2="232" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah3)"/>
+
+        <!-- Condition: qty exhausted? -->
+        <polygon points="655,234 725,264 655,294 585,264" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="655" y="261" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor">Layer</text>
+        <text x="655" y="273" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor">Exhausted?</text>
+
+        <!-- No -->
+        <line x1="725" y1="264" x2="790" y2="264" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="758" y="257" font-size="9" font-weight="600" fill="var(--green)">NO</text>
+        <text x="790" y="260" font-size="9" fill="var(--fg-dim)" text-anchor="start">Partial layer</text>
+        <text x="790" y="274" font-size="9" fill="var(--fg-dim)" text-anchor="start">remains</text>
+
+        <!-- Yes -->
+        <line x1="655" y1="294" x2="655" y2="322" stroke="var(--amber)" stroke-width="1.5" marker-end="url(#ah3)"/>
+        <text x="665" y="312" font-size="9" font-weight="600" fill="var(--amber)">YES</text>
+
+        <rect x="570" y="324" width="170" height="46" rx="6" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="655" y="344" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber-fg)">Move to Next Layer</text>
+        <text x="655" y="358" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">FIFO order (oldest first)</text>
+
+        <!-- Note about partial layers -->
+        <rect x="540" y="395" width="230" height="50" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="655" y="415" text-anchor="middle" font-size="9" fill="var(--fg-dim)">If order spans multiple layers:</text>
+        <text x="655" y="430" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor">Weighted-average cost across layers</text>
+        <line x1="655" y1="370" x2="655" y2="393" stroke="var(--fg-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+      <figcaption>SO lines are priced from FIFO layers on save; Invoice creation decrements layer quantities in FIFO order</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- ==================== CONTAINER OPS ==================== -->
+<div class="panel" id="container">
+  <div class="card">
+    <h2>Container Operations — Distribute Freight</h2>
+    <p class="card-desc">The Container record holds total freight and misc. The "Distribute Freight" button allocates these across all linked POs by weight share.</p>
+    <figure>
+      <svg viewBox="0 0 840 400" role="img" aria-label="Container distribute freight flow showing button click, suitelet call, weight-based allocation, and PO update">
+        <defs>
+          <marker id="ah4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- User clicks button -->
+        <rect x="30" y="30" width="160" height="50" rx="8" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="110" y="52" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">User Clicks</text>
+        <text x="110" y="66" text-anchor="middle" font-size="9" fill="var(--fg-dim)">"Distribute Freight"</text>
+
+        <line x1="190" y1="55" x2="228" y2="55" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah4)"/>
+
+        <!-- Confirm dialog -->
+        <polygon points="320,30 390,55 320,80 250,55" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1.5"/>
+        <text x="320" y="52" text-anchor="middle" font-size="9" font-weight="600" fill="var(--amber-fg)">Confirm</text>
+        <text x="320" y="64" text-anchor="middle" font-size="9" font-weight="600" fill="var(--amber-fg)">Dialog?</text>
+
+        <!-- Cancel -->
+        <line x1="320" y1="80" x2="320" y2="110" stroke="var(--red)" stroke-width="1"/>
+        <text x="330" y="100" font-size="8" fill="var(--red)">Cancel → stop</text>
+
+        <!-- OK -->
+        <line x1="390" y1="55" x2="438" y2="55" stroke="var(--green)" stroke-width="1.5" marker-end="url(#ah4)"/>
+        <text x="414" y="48" font-size="8" fill="var(--green)">OK</text>
+
+        <!-- CS calls Suitelet -->
+        <rect x="440" y="30" width="170" height="50" rx="8" fill="var(--purple-light)" stroke="var(--purple)" stroke-width="1.5"/>
+        <text x="525" y="52" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple-fg)">Client Script</text>
+        <text x="525" y="66" text-anchor="middle" font-size="9" fill="var(--fg-dim)">N/https.get() → Suitelet</text>
+
+        <line x1="525" y1="80" x2="525" y2="118" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah4)"/>
+
+        <!-- Suitelet processing -->
+        <rect x="370" y="120" width="310" height="180" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="385" y="142" font-size="10" font-weight="700" fill="currentColor">Suitelet Processing</text>
+
+        <!-- Steps inside -->
+        <rect x="385" y="155" width="280" height="28" rx="4" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="395" y="174" font-size="9" fill="currentColor">1. Search all POs linked to this Container</text>
+
+        <rect x="385" y="190" width="280" height="28" rx="4" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="395" y="209" font-size="9" fill="currentColor">2. Sum total weight across all POs</text>
+
+        <rect x="385" y="225" width="280" height="28" rx="4" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="395" y="244" font-size="9" fill="currentColor">3. Each PO share = PO weight ÷ total weight</text>
+
+        <rect x="385" y="260" width="280" height="28" rx="4" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="1"/>
+        <text x="395" y="279" font-size="9" font-weight="600" fill="var(--amber-fg)">4. record.load() → setValue → save()</text>
+
+        <!-- Why not submitFields -->
+        <rect x="30" y="255" width="310" height="46" rx="6" fill="var(--red-light)" stroke="var(--red)" stroke-width="1"/>
+        <text x="185" y="273" text-anchor="middle" font-size="9" font-weight="600" fill="var(--red-fg)">⚠ Must use load + save (not submitFields)</text>
+        <text x="185" y="287" text-anchor="middle" font-size="8.5" fill="var(--fg-dim)">submitFields doesn't trigger beforeSubmit for line recalc</text>
+        <line x1="340" y1="278" x2="383" y2="274" stroke="var(--red)" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- Response back -->
+        <line x1="525" y1="300" x2="525" y2="328" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah4)"/>
+
+        <!-- JSON response -->
+        <rect x="440" y="330" width="170" height="50" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="525" y="352" text-anchor="middle" font-size="10" font-weight="600" fill="var(--green-fg)">JSON Response</text>
+        <text x="525" y="366" text-anchor="middle" font-size="9" fill="var(--fg-dim)">CS shows alert → reloads page</text>
+
+        <!-- Architecture labels -->
+        <rect x="30" y="120" width="100" height="24" rx="4" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1"/>
+        <text x="80" y="136" text-anchor="middle" font-size="9" font-weight="600" fill="var(--accent-fg)">Pattern</text>
+        <text x="30" y="165" font-size="9" fill="var(--fg-dim)">UE: adds button,</text>
+        <text x="30" y="180" font-size="9" fill="var(--fg-dim)">sets clientScriptModulePath</text>
+        <text x="30" y="200" font-size="9" fill="var(--fg-dim)">CS: defines button function,</text>
+        <text x="30" y="215" font-size="9" fill="var(--fg-dim)">calls Suitelet via HTTPS</text>
+        <text x="30" y="235" font-size="9" fill="var(--fg-dim)">SL: server-side work,</text>
+        <text x="30" y="250" font-size="9" fill="var(--fg-dim)">returns JSON</text>
+      </svg>
+      <figcaption>UE + CS + Suitelet pattern: button triggers client-side call to server-side processor, returns JSON for user feedback</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- ==================== LINE MAPPING ==================== -->
+<div class="panel" id="mapping">
+  <div class="card">
+    <h2>Line-Level Container Mapping</h2>
+    <p class="card-desc">One SO can pull items from multiple containers. The container must be tracked at the line level, not just the header.</p>
+    <figure>
+      <svg viewBox="0 0 840 420" role="img" aria-label="Diagram showing why line-level container mapping is needed: one SO with lines from different containers">
+        <defs>
+          <marker id="ah5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- Container A -->
+        <rect x="30" y="30" width="160" height="120" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="110" y="52" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent-fg)">Container A</text>
+        <text x="110" y="66" text-anchor="middle" font-size="9" fill="var(--fg-dim)">MAGU5577010</text>
+        <rect x="42" y="78" width="136" height="22" rx="3" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+        <text x="110" y="93" text-anchor="middle" font-size="8.5" fill="currentColor">Item: SWD_6063</text>
+        <rect x="42" y="106" width="136" height="22" rx="3" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+        <text x="110" y="121" text-anchor="middle" font-size="8.5" fill="currentColor">Item: MB_6997</text>
+
+        <!-- Container B -->
+        <rect x="30" y="180" width="160" height="100" rx="8" fill="var(--teal-light)" stroke="var(--teal)" stroke-width="1.5"/>
+        <text x="110" y="202" text-anchor="middle" font-size="10" font-weight="700" fill="var(--teal-fg)">Container B</text>
+        <text x="110" y="216" text-anchor="middle" font-size="9" fill="var(--fg-dim)">TCNU4482910</text>
+        <rect x="42" y="228" width="136" height="22" rx="3" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+        <text x="110" y="243" text-anchor="middle" font-size="8.5" fill="currentColor">Item: MB_6997 (more)</text>
+
+        <!-- SO -->
+        <rect x="350" y="60" width="200" height="200" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
+        <text x="450" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Sales Order (Mathews Bros)</text>
+        <text x="450" y="100" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Multiple containers on one SO</text>
+
+        <!-- SO Line 1 -->
+        <rect x="365" y="115" width="170" height="40" rx="4" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1"/>
+        <text x="375" y="132" font-size="9" font-weight="600" fill="var(--accent-fg)">Line 1: SWD_6063</text>
+        <text x="375" y="146" font-size="8" fill="var(--fg-dim)" font-family="var(--font-mono)">container = A</text>
+
+        <!-- SO Line 2 -->
+        <rect x="365" y="165" width="170" height="40" rx="4" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1"/>
+        <text x="375" y="182" font-size="9" font-weight="600" fill="var(--accent-fg)">Line 2: MB_6997 (partial)</text>
+        <text x="375" y="196" font-size="8" fill="var(--fg-dim)" font-family="var(--font-mono)">container = A</text>
+
+        <!-- SO Line 3 -->
+        <rect x="365" y="215" width="170" height="40" rx="4" fill="var(--teal-light)" stroke="var(--teal)" stroke-width="1"/>
+        <text x="375" y="232" font-size="9" font-weight="600" fill="var(--teal-fg)">Line 3: MB_6997 (rest)</text>
+        <text x="375" y="246" font-size="8" fill="var(--fg-dim)" font-family="var(--font-mono)">container = B</text>
+
+        <!-- Arrows Container A → SO lines -->
+        <line x1="190" y1="90" x2="363" y2="130" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ah5)"/>
+        <line x1="190" y1="118" x2="363" y2="178" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ah5)"/>
+
+        <!-- Arrow Container B → SO line 3 -->
+        <line x1="190" y1="238" x2="363" y2="230" stroke="var(--teal)" stroke-width="1.5" marker-end="url(#ah5)"/>
+
+        <!-- Arrow SO → Invoice -->
+        <line x1="550" y1="160" x2="608" y2="160" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah5)"/>
+        <text x="579" y="153" text-anchor="middle" font-size="8" fill="var(--fg-muted)">bill</text>
+
+        <!-- Invoice -->
+        <rect x="610" y="60" width="200" height="200" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
+        <text x="710" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Invoice (Mathews Bros)</text>
+        <text x="710" y="100" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Container mapping inherited</text>
+
+        <rect x="625" y="115" width="170" height="40" rx="4" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1"/>
+        <text x="635" y="132" font-size="9" font-weight="600" fill="var(--accent-fg)">Line 1: SWD_6063</text>
+        <text x="635" y="146" font-size="8" fill="var(--fg-dim)" font-family="var(--font-mono)">container = A</text>
+
+        <rect x="625" y="165" width="170" height="40" rx="4" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1"/>
+        <text x="635" y="182" font-size="9" font-weight="600" fill="var(--accent-fg)">Line 2: MB_6997</text>
+        <text x="635" y="196" font-size="8" fill="var(--fg-dim)" font-family="var(--font-mono)">container = A</text>
+
+        <rect x="625" y="215" width="170" height="40" rx="4" fill="var(--teal-light)" stroke="var(--teal)" stroke-width="1"/>
+        <text x="635" y="232" font-size="9" font-weight="600" fill="var(--teal-fg)">Line 3: MB_6997</text>
+        <text x="635" y="246" font-size="8" fill="var(--fg-dim)" font-family="var(--font-mono)">container = B</text>
+
+        <!-- New field callout -->
+        <rect x="310" y="310" width="240" height="56" rx="8" fill="var(--purple-light)" stroke="var(--purple)" stroke-width="1.5"/>
+        <text x="430" y="332" text-anchor="middle" font-size="10" font-weight="700" fill="var(--purple-fg)">custcol_f3_al_container</text>
+        <text x="430" y="348" text-anchor="middle" font-size="9" fill="var(--fg-dim)">Line-level column on SO &amp; Invoice</text>
+        <text x="430" y="360" text-anchor="middle" font-size="8" fill="var(--purple-fg)">Links each line to its source container</text>
+        <line x1="430" y1="262" x2="430" y2="308" stroke="var(--purple)" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <!-- Reason box -->
+        <rect x="30" y="320" width="240" height="70" rx="6" fill="var(--surface-alt)" stroke="var(--border)" stroke-width="1"/>
+        <text x="42" y="340" font-size="9" font-weight="600" fill="var(--fg-dim)">WHY LINE-LEVEL?</text>
+        <text x="42" y="358" font-size="9" fill="currentColor">Same item (MB_6997) can come from</text>
+        <text x="42" y="372" font-size="9" fill="currentColor">two containers with different costs.</text>
+        <text x="42" y="386" font-size="9" fill="currentColor">Header-only mapping can't distinguish.</text>
+      </svg>
+      <figcaption>Real scenario from Container MAGU5577010: Mathews Brothers could receive the same item from two different containers at different costs</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- ==================== FIELD REFERENCE ==================== -->
+<div class="panel" id="fields">
+  <div class="card">
+    <h2>Custom Record — Container</h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Container Number</td><td><code>name</code></td><td>Text</td><td>e.g., MAGU5577010</td></tr>
+        <tr><td>Total Freight</td><td><code>custrecord_f3_al_total_freight</code></td><td>Currency</td><td>Ocean freight + customs broker fees</td></tr>
+        <tr><td>Total Misc</td><td><code>custrecord_f3_al_total_misc</code></td><td>Currency</td><td>Other inbound charges</td></tr>
+        <tr><td>Total Weight</td><td><code>custrecord_f3_al_total_weight</code></td><td>Decimal</td><td>Sum weight across all linked POs</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Purchase Order — Aluminum Fields</h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Container</td><td><code>custbody_f3_al_container</code></td><td>List/Record</td><td>Link to Container record</td></tr>
+        <tr><td>LME Rate</td><td><code>custbody_f3_al_lme_rate</code></td><td>Currency</td><td>Locked LME 3-month $/lb at PO creation</td></tr>
+        <tr><td>MJP</td><td><code>custbody_f3_al_mjp</code></td><td>Currency</td><td>Midwest Journal Premium $/lb</td></tr>
+        <tr><td>Freight Share</td><td><code>custbody_f3_al_freight_share</code></td><td>Currency</td><td>Weight-proportional freight from container</td></tr>
+        <tr><td>Misc Share</td><td><code>custbody_f3_al_misc_share</code></td><td>Currency</td><td>Weight-proportional misc from container</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Item Fields <span class="cond cond-new">NEW &amp; EXISTING</span></h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Weight per Piece</td><td><code>custitem_f3_al_weight_per_piece</code></td><td>Decimal (lb)</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Conversion Cost</td><td><code>custitem_f3_al_conversion_cost</code></td><td>Currency ($/lb)</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Duty Type</td><td><code>custitem_f3_al_duty_type</code></td><td>List</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Fabrication Cost</td><td><code>custitem_f3_al_fabrication_cost</code></td><td>Currency ($/piece)</td><td><span class="cond cond-new">NEW</span></td></tr>
+        <tr><td>Billet Surcharge</td><td><code>custitem_f3_al_billet_surcharge</code></td><td>Currency ($/lb)</td><td><span class="cond cond-new">NEW</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>SO / Invoice — Line-Level Column <span class="cond cond-new">NEW</span></h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Level</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Container</td><td><code>custcol_f3_al_container</code></td><td>Line (item sublist)</td><td>Links each SO/Invoice line to its source container for FIFO lookup</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Scripts Deployed</h2>
+    <table class="field-table">
+      <thead><tr><th>Script</th><th>Type</th><th>Record</th><th>File</th></tr></thead>
+      <tbody>
+        <tr><td>SO Aluminum Calc</td><td>User Event</td><td>Sales Order</td><td><code>f3_so_alu_calc_ue.js</code></td></tr>
+        <tr><td>PO Customization</td><td>User Event</td><td>Purchase Order</td><td><code>f3_po_customization_ue.js</code></td></tr>
+        <tr><td>IR Customization</td><td>User Event</td><td>Item Receipt</td><td><code>f3_item_receipt_customization_ue.js</code></td></tr>
+        <tr><td>Container UE</td><td>User Event</td><td>Container</td><td><code>f3_al_container_ue.js</code></td></tr>
+        <tr><td>Container CS</td><td>Client Script</td><td>Container</td><td><code>f3_al_container_cs.js</code></td></tr>
+        <tr><td>Distribute Freight</td><td>Suitelet</td><td>—</td><td><code>f3_al_container_distribute.js</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.panel;
+      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      document.getElementById(target).classList.add('active');
+      try { localStorage.setItem('evo-alu-tab', target); } catch(e) {}
+    });
+  });
+
+  // Restore last tab
+  try {
+    const saved = localStorage.getItem('evo-alu-tab');
+    if (saved) {
+      const t = document.querySelector(`[data-panel="${saved}"]`);
+      if (t) t.click();
+    }
+  } catch(e) {}
+</script>
+
+</body></html>
