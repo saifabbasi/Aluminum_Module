@@ -913,68 +913,317 @@
 
 <!-- ==================== FIELD REFERENCE ==================== -->
 <div class="panel" id="fields">
+
+  <!-- ===== CUSTOM RECORDS ===== -->
   <div class="card">
-    <h2>Custom Record — Container</h2>
+    <h2>Custom Records — All 7</h2>
+    <p class="card-desc">Every custom record type in the aluminum FIFO system.</p>
+    <table class="field-table">
+      <thead><tr><th>Record</th><th>Type ID</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Container</td><td><code>customrecord_f3_al_container</code></td><td>Shipping container — holds freight/misc totals, links to POs</td></tr>
+        <tr><td>FIFO Layer</td><td><code>customrecord_f3_rlf_aluminum</code></td><td>Cost layer per item receipt line — stores full DDP cost breakdown</td></tr>
+        <tr><td>Reservation</td><td><code>customrecord_f3_al_reservation</code></td><td>SO line → FIFO layer qty reservation (locks inventory for order)</td></tr>
+        <tr><td>Customer Item Margin</td><td><code>customrecord_f3_al_cust_item_margin</code></td><td>EXW &amp; DDP margin % per customer per item</td></tr>
+        <tr><td>LME Rates</td><td><code>customrecord_f3_lme_rates</code></td><td>Daily LME spot &amp; 3-month prices (from API import)</td></tr>
+        <tr><td>FIFO Shortfall Log</td><td><code>customrecord_f3_fifo_shortfall</code></td><td>Logs when SO qty exceeds available FIFO layers</td></tr>
+        <tr><td>Aluminum Config</td><td><code>customrecord_f3_alu_config</code></td><td>System-wide settings — vendor IDs, MJP default, notify employee</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== CONTAINER ===== -->
+  <div class="card">
+    <h2>Container Record Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_al_container</code></p>
     <table class="field-table">
       <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td>Container Number</td><td><code>name</code></td><td>Text</td><td>e.g., MAGU5577010</td></tr>
-        <tr><td>Total Freight</td><td><code>custrecord_f3_al_total_freight</code></td><td>Currency</td><td>Ocean freight + customs broker fees</td></tr>
-        <tr><td>Total Misc</td><td><code>custrecord_f3_al_total_misc</code></td><td>Currency</td><td>Other inbound charges</td></tr>
-        <tr><td>Total Weight</td><td><code>custrecord_f3_al_total_weight</code></td><td>Decimal</td><td>Sum weight across all linked POs</td></tr>
+        <tr><td>Total Freight</td><td><code>custrecord_f3_cnt_freight</code></td><td>Currency</td><td>Ocean freight + customs broker fees</td></tr>
+        <tr><td>Total Misc</td><td><code>custrecord_f3_cnt_misc</code></td><td>Currency</td><td>Other inbound charges</td></tr>
+        <tr><td>Total Weight</td><td><code>custrecord_f3_cnt_total_weight</code></td><td>Decimal</td><td>Sum weight across all linked POs</td></tr>
+        <tr><td>Status</td><td><code>custrecord_f3_cnt_status</code></td><td>List</td><td>Container lifecycle status</td></tr>
       </tbody>
     </table>
   </div>
 
+  <!-- ===== FIFO LAYER ===== -->
   <div class="card">
-    <h2>Purchase Order — Aluminum Fields</h2>
+    <h2>FIFO Layer Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_rlf_aluminum</code> — one record per Item Receipt line</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Item</td><td><code>custrecord_f3_al_rl_item</code></td><td>List/Record</td><td>Inventory item</td></tr>
+        <tr><td>Purchase Order</td><td><code>custrecord_f3_al_rl_po</code></td><td>List/Record</td><td>Source PO</td></tr>
+        <tr><td>Item Receipt</td><td><code>custrecord_f3_al_rl_receipt</code></td><td>List/Record</td><td>Source Item Receipt</td></tr>
+        <tr><td>Receipt Date</td><td><code>custrecord_f3_al_rl_receipt_date</code></td><td>Date</td><td>Date received</td></tr>
+        <tr><td>Vendor</td><td><code>custrecord_f3_al_rl_vendor</code></td><td>List/Record</td><td>Hanwood / Extrum</td></tr>
+        <tr><td>Original Qty</td><td><code>custrecord_f3_al_rl_qty</code></td><td>Decimal</td><td>Qty received (pieces)</td></tr>
+        <tr><td>Remaining Qty</td><td><code>custrecord_f3_al_rl_remaining_qty</code></td><td>Decimal</td><td>Qty available for consumption</td></tr>
+        <tr><td>Reserved Qty</td><td><code>custrecord_f3_al_rl_reserved_qty</code></td><td>Decimal</td><td>Qty held by SO reservations</td></tr>
+        <tr><td>Consumed Qty</td><td><code>custrecord_f3_al_rl_consumed_qty</code></td><td>Decimal</td><td>Qty already invoiced</td></tr>
+        <tr><td>Cost per Unit</td><td><code>custrecord_f3_al_rl_cost_per_unit</code></td><td>Currency</td><td>Full DDP cost per piece</td></tr>
+        <tr><td>LME Rate</td><td><code>custrecord_f3_al_lme_rate</code></td><td>Currency</td><td>LME $/lb locked at PO time</td></tr>
+        <tr><td>DDP Freight</td><td><code>custrecord_f3_ddp_freight</code></td><td>Currency</td><td>Freight component $/lb</td></tr>
+        <tr><td>DDP Container Misc</td><td><code>custrecord_f3_ddp_cnt_misc</code></td><td>Currency</td><td>Container misc component $/lb</td></tr>
+        <tr><td>DDP PO Misc</td><td><code>custrecord_f3_ddp_po_misc</code></td><td>Currency</td><td>PO-level misc component $/lb</td></tr>
+        <tr><td>DDP Duty</td><td><code>custrecord_f3_ddp_duty</code></td><td>Currency</td><td>Duty amount $/lb</td></tr>
+        <tr><td>DDP Section 232</td><td><code>custrecord_f3_ddp_tariff</code></td><td>Currency</td><td>Section 232 tariff $/lb</td></tr>
+        <tr><td>DDP HMF</td><td><code>custrecord_f3_ddp_hmf</code></td><td>Currency</td><td>Harbor Maintenance Fee $/lb</td></tr>
+        <tr><td>DDP MPF</td><td><code>custrecord_f3_ddp_mpf</code></td><td>Currency</td><td>Merchandise Processing Fee $/lb</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== RESERVATION ===== -->
+  <div class="card">
+    <h2>Reservation Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_al_reservation</code> — SO line locks FIFO layer qty</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Sales Order</td><td><code>custrecord_f3_res_so</code></td><td>List/Record</td><td>Source SO</td></tr>
+        <tr><td>Item</td><td><code>custrecord_f3_res_item</code></td><td>List/Record</td><td>Reserved item</td></tr>
+        <tr><td>FIFO Layer</td><td><code>custrecord_f3_res_layer</code></td><td>List/Record</td><td>Layer being reserved from</td></tr>
+        <tr><td>Qty Reserved</td><td><code>custrecord_f3_res_qty</code></td><td>Decimal</td><td>Pieces reserved</td></tr>
+        <tr><td>Line Key</td><td><code>custrecord_f3_res_linekey</code></td><td>Text</td><td>SO line unique key for matching</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== CUSTOMER ITEM MARGIN ===== -->
+  <div class="card">
+    <h2>Customer Item Margin Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_al_cust_item_margin</code> — margin % per customer per item</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Customer</td><td><code>custrecord_f3_cim_customer</code></td><td>List/Record</td><td>Customer entity</td></tr>
+        <tr><td>Item</td><td><code>custrecord_f3_cim_item</code></td><td>List/Record</td><td>Inventory item</td></tr>
+        <tr><td>EXW Margin %</td><td><code>custrecord_f3_cim_exw_margin</code></td><td>Percent</td><td>EXW markup (varies: 30-57%)</td></tr>
+        <tr><td>DDP Margin %</td><td><code>custrecord_f3_cim_ddp_margin</code></td><td>Percent</td><td>DDP markup (typically fixed 7%)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== LME RATES ===== -->
+  <div class="card">
+    <h2>LME Rates Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_lme_rates</code> — daily LME prices from API import</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Date</td><td><code>custrecord_f3_rec_date</code></td><td>Date</td><td>Price date</td></tr>
+        <tr><td>LME Spot</td><td><code>custrecord_f3_lme_spot</code></td><td>Currency</td><td>Spot price $/metric ton</td></tr>
+        <tr><td>LME 3-Month</td><td><code>custrecord_f3_lme_3m</code></td><td>Currency</td><td>3-month forward $/metric ton</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== FIFO SHORTFALL LOG ===== -->
+  <div class="card">
+    <h2>FIFO Shortfall Log Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_fifo_shortfall</code> — logged when SO exceeds available FIFO</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Sales Order</td><td><code>custrecord_f3_sf_so</code></td><td>List/Record</td><td>SO with shortfall</td></tr>
+        <tr><td>Customer</td><td><code>custrecord_f3_sf_customer</code></td><td>List/Record</td><td>Customer on SO</td></tr>
+        <tr><td>Item</td><td><code>custrecord_f3_sf_item</code></td><td>List/Record</td><td>Short item</td></tr>
+        <tr><td>Qty Ordered</td><td><code>custrecord_f3_sf_qty_ordered</code></td><td>Decimal</td><td>Qty on SO line</td></tr>
+        <tr><td>Qty Available</td><td><code>custrecord_f3_sf_qty_available</code></td><td>Decimal</td><td>Available in FIFO layers</td></tr>
+        <tr><td>Qty Short</td><td><code>custrecord_f3_sf_qty_short</code></td><td>Decimal</td><td>Deficit (ordered − available)</td></tr>
+        <tr><td>Fallback Cost</td><td><code>custrecord_f3_sf_fallback_cost</code></td><td>Currency</td><td>Estimated cost used when FIFO unavailable</td></tr>
+        <tr><td>Date</td><td><code>custrecord_f3_sf_date</code></td><td>Date</td><td>When shortfall was logged</td></tr>
+        <tr><td>Status</td><td><code>custrecord_f3_sf_status</code></td><td>List</td><td>Open / Resolved</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== ALUMINUM CONFIG ===== -->
+  <div class="card">
+    <h2>Aluminum Config Fields</h2>
+    <p class="card-desc"><code>customrecord_f3_alu_config</code> — singleton, system-wide settings</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Hanwood Vendor ID</td><td><code>custrecord_f3_cfg_hanwood_id</code></td><td>Integer</td><td>Internal ID for Hanwood vendor</td></tr>
+        <tr><td>Extrum Vendor ID</td><td><code>custrecord_f3_cfg_extrum_id</code></td><td>Integer</td><td>Internal ID for Extrum vendor</td></tr>
+        <tr><td>Default MJP</td><td><code>custrecord_f3_cfg_mjp</code></td><td>Currency</td><td>Default MJP $/lb when not on PO</td></tr>
+        <tr><td>Notify Employee</td><td><code>custrecord_f3_cfg_notify_employee</code></td><td>List/Record</td><td>Employee to email on shortfalls</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr style="border:none;border-top:2px solid var(--border);margin:2rem 0">
+
+  <!-- ===== PURCHASE ORDER ===== -->
+  <div class="card">
+    <h2>Purchase Order — Body Fields</h2>
     <table class="field-table">
       <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td>Container</td><td><code>custbody_f3_al_container</code></td><td>List/Record</td><td>Link to Container record</td></tr>
-        <tr><td>LME Rate</td><td><code>custbody_f3_al_lme_rate</code></td><td>Currency</td><td>Locked LME 3-month $/lb at PO creation</td></tr>
-        <tr><td>MJP</td><td><code>custbody_f3_al_mjp</code></td><td>Currency</td><td>Midwest Journal Premium $/lb</td></tr>
-        <tr><td>Freight Share</td><td><code>custbody_f3_al_freight_share</code></td><td>Currency</td><td>Weight-proportional freight from container</td></tr>
-        <tr><td>Misc Share</td><td><code>custbody_f3_al_misc_share</code></td><td>Currency</td><td>Weight-proportional misc from container</td></tr>
+        <tr><td>Is Aluminum Txn</td><td><code>custbody_f3_is_aluminum_txn</code></td><td>Checkbox</td><td>Flags PO as aluminum for script filtering</td></tr>
+        <tr><td>MJP Premium</td><td><code>custbody_al_mjp_premium</code></td><td>Currency</td><td>MJP $/lb on this PO</td></tr>
+        <tr><td>Freight Share</td><td><code>custbody_f3_cnt_freight_share</code></td><td>Currency</td><td>Weight-proportional freight from container</td></tr>
+        <tr><td>Misc Share</td><td><code>custbody_f3_cnt_misc_share</code></td><td>Currency</td><td>Weight-proportional misc from container</td></tr>
+        <tr><td>Misc Charge</td><td><code>custbody_f3_al_misc_charge</code></td><td>Currency</td><td>PO-level misc (non-container)</td></tr>
+        <tr><td>Total Inbound</td><td><code>custbody_al_total_inbound</code></td><td>Currency</td><td>Total inbound cost (freight + misc + duties)</td></tr>
+        <tr><td>Qty Released</td><td><code>custbody_f3_al_qty_released</code></td><td>Decimal</td><td>Qty released from reservations</td></tr>
+        <tr><td>Skip Redistribute</td><td><code>custbody_f3_al_skip_redistribute</code></td><td>Checkbox</td><td>Prevents re-triggering distribute on save</td></tr>
+        <tr><td>Insufficient FIFO</td><td><code>custbody_f3_insufficient_fifo</code></td><td>Checkbox</td><td>Flagged when FIFO layers are short</td></tr>
+        <tr><td>Mill Accept Date</td><td><code>custbody_f3_mill_accept_date</code></td><td>Date</td><td>Date mill accepted the order</td></tr>
+        <tr><td>Ship Date</td><td><code>custbody_f3_ship_date</code></td><td>Date</td><td>Estimated ship date</td></tr>
+        <tr><td>Actual Freight</td><td><code>custbody_f3_actual_freight</code></td><td>Currency</td><td>Actual freight cost (post-arrival)</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="card">
-    <h2>Item Fields <span class="cond cond-new">NEW &amp; EXISTING</span></h2>
+    <h2>Purchase Order — Line Fields</h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>LME Locked</td><td><code>custcol_al_lme_locked</code></td><td>Currency</td><td>LME rate locked to this line at PO creation</td></tr>
+        <tr><td>Line Value</td><td><code>custcol_al_line_value</code></td><td>Currency</td><td>Hanwood invoice price × qty (Entered Value)</td></tr>
+        <tr><td>Inbound Allocation</td><td><code>custcol_al_inbound_alloc</code></td><td>Currency</td><td>Share of total inbound costs for this line</td></tr>
+        <tr><td>Inbound Per Unit</td><td><code>custcol_al_inbound_per_unit</code></td><td>Currency</td><td>Inbound cost per piece</td></tr>
+        <tr><td>Weight</td><td><code>custcol_f3_al_weight</code></td><td>Decimal</td><td>Total weight of this line (qty × wt/piece)</td></tr>
+        <tr><td>Conversion Cost</td><td><code>custcol_f3_al_conv_cost</code></td><td>Currency</td><td>Conversion cost $/lb for this item</td></tr>
+        <tr><td>EXW Cost</td><td><code>custcol_f3_al_exw_cost</code></td><td>Currency</td><td>Calculated EXW $/lb</td></tr>
+        <tr><td>DDP Duty</td><td><code>custcol_f3_al_ddp_duty</code></td><td>Currency</td><td>Duty $/lb on this line</td></tr>
+        <tr><td>DDP Tariff (232)</td><td><code>custcol_f3_al_ddp_tariff</code></td><td>Currency</td><td>Section 232 $/lb</td></tr>
+        <tr><td>DDP Freight</td><td><code>custcol_f3_al_ddp_freight</code></td><td>Currency</td><td>Freight $/lb</td></tr>
+        <tr><td>DDP HMF</td><td><code>custcol_f3_al_ddp_hmf</code></td><td>Currency</td><td>Harbor Maintenance Fee $/lb</td></tr>
+        <tr><td>DDP MPF</td><td><code>custcol_f3_al_ddp_mpf</code></td><td>Currency</td><td>Merchandise Processing Fee $/lb</td></tr>
+        <tr><td>Container Misc</td><td><code>custcol_f3_al_cnt_misc</code></td><td>Currency</td><td>Container misc $/lb</td></tr>
+        <tr><td>PO Misc</td><td><code>custcol_f3_al_po_misc</code></td><td>Currency</td><td>PO-level misc $/lb</td></tr>
+        <tr><td>Total DDP Cost</td><td><code>custcol_f3_al_total_ddp_cost</code></td><td>Currency</td><td>Full DDP $/lb</td></tr>
+        <tr><td>Finished Cost</td><td><code>custcol_f3_al_fin_cost</code></td><td>Currency</td><td>Final landed cost per piece</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== ITEM FIELDS ===== -->
+  <div class="card">
+    <h2>Item Fields</h2>
+    <p class="card-desc">Custom fields on Inventory Item records</p>
     <table class="field-table">
       <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td>Weight per Piece</td><td><code>custitem_f3_al_weight_per_piece</code></td><td>Decimal (lb)</td><td><span class="cond cond-yes">LIVE</span></td></tr>
-        <tr><td>Conversion Cost</td><td><code>custitem_f3_al_conversion_cost</code></td><td>Currency ($/lb)</td><td><span class="cond cond-yes">LIVE</span></td></tr>
-        <tr><td>Duty Type</td><td><code>custitem_f3_al_duty_type</code></td><td>List</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Weight per Piece</td><td><code>custitem_f3_al_weight</code></td><td>Decimal (lb)</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Conversion Cost</td><td><code>custitem_f3_al_conv_cost</code></td><td>Currency ($/lb)</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Aluminum Type</td><td><code>custitem_f3_al_type</code></td><td>List</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Section 232 Rate</td><td><code>custitem_f3_al_section232_rate</code></td><td>Percent</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Cutting Rate</td><td><code>custitem_f3_al_cutting_rate</code></td><td>Currency</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Lightweight Rate</td><td><code>custitem_f3_al_lightweight_rate</code></td><td>Currency</td><td><span class="cond cond-yes">LIVE</span></td></tr>
+        <tr><td>Length per Piece</td><td><code>custitem_f3_length_per_piece</code></td><td>Decimal</td><td><span class="cond cond-yes">LIVE</span></td></tr>
         <tr><td>Fabrication Cost</td><td><code>custitem_f3_al_fabrication_cost</code></td><td>Currency ($/piece)</td><td><span class="cond cond-new">NEW</span></td></tr>
         <tr><td>Billet Surcharge</td><td><code>custitem_f3_al_billet_surcharge</code></td><td>Currency ($/lb)</td><td><span class="cond cond-new">NEW</span></td></tr>
       </tbody>
     </table>
   </div>
 
+  <hr style="border:none;border-top:2px solid var(--border);margin:2rem 0">
+
+  <!-- ===== SO / INVOICE ===== -->
   <div class="card">
-    <h2>SO / Invoice — Line-Level Column <span class="cond cond-new">NEW</span></h2>
+    <h2>Sales Order / Invoice — Body Fields</h2>
     <table class="field-table">
-      <thead><tr><th>Field</th><th>ID</th><th>Level</th><th>Description</th></tr></thead>
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
-        <tr><td>Container</td><td><code>custcol_f3_al_container</code></td><td>Line (item sublist)</td><td>Links each SO/Invoice line to its source container for FIFO lookup</td></tr>
+        <tr><td>Is Aluminum Txn</td><td><code>custbody_f3_is_aluminum_txn</code></td><td>Checkbox</td><td>Flags as aluminum transaction</td></tr>
+        <tr><td>Insufficient FIFO</td><td><code>custbody_f3_insufficient_fifo</code></td><td>Checkbox</td><td>Flagged when FIFO layers are short</td></tr>
       </tbody>
     </table>
   </div>
 
+  <div class="card">
+    <h2>Sales Order / Invoice — Line Fields</h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Container</td><td><code>custcol_f3_al_container</code></td><td>List/Record</td><td>Source container for this line <span class="cond cond-new">NEW</span></td></tr>
+        <tr><td>FIFO Layer</td><td><code>custcol_al_fifo_layer</code></td><td>List/Record</td><td>Primary FIFO layer used for pricing</td></tr>
+        <tr><td>Layer Allocations</td><td><code>custcol_f3_layer_allocations</code></td><td>Text (JSON)</td><td>Multi-layer allocation detail when qty spans layers</td></tr>
+        <tr><td>Weight</td><td><code>custcol_f3_al_weight</code></td><td>Decimal</td><td>Total line weight (qty × wt/piece)</td></tr>
+        <tr><td>Length per Piece</td><td><code>custcol_f3_length_per_piece</code></td><td>Decimal</td><td>Length per piece (from item)</td></tr>
+        <tr><td>Material Cost</td><td><code>custcol_f3_mat_cost</code></td><td>Currency</td><td>DDP cost from FIFO layer</td></tr>
+        <tr><td>Inbound Cost</td><td><code>custcol_f3_inbound_cost</code></td><td>Currency</td><td>Total inbound cost component</td></tr>
+        <tr><td>Total Aluminum Cost</td><td><code>custcol_f3_total_al_cost</code></td><td>Currency</td><td>Full cost per unit (DDP + all components)</td></tr>
+        <tr><td>EXW Margin %</td><td><code>custcol_f3_exw_margin</code></td><td>Percent</td><td>EXW markup from Customer Item Margin</td></tr>
+        <tr><td>EXW Sell</td><td><code>custcol_f3_exw_sell</code></td><td>Currency</td><td>EXW sell price $/lb</td></tr>
+        <tr><td>DDP Margin %</td><td><code>custcol_f3_ddp_margin</code></td><td>Percent</td><td>DDP markup (typically 7%)</td></tr>
+        <tr><td>DDP Sell</td><td><code>custcol_f3_ddp_sell</code></td><td>Currency</td><td>DDP sell price $/lb</td></tr>
+        <tr><td>Fallback Cost</td><td><code>custcol_f3_fallback_cost</code></td><td>Currency</td><td>Estimated cost when no FIFO layer available</td></tr>
+        <tr><td>FIFO Shortfall</td><td><code>custcol_f3_fifo_shortfall</code></td><td>Checkbox</td><td>Line flagged as short on FIFO inventory</td></tr>
+        <tr><td>Invoice Freight %</td><td><code>custcol_f3_inv_freight_pc</code></td><td>Percent</td><td>Actual freight allocation % on invoice</td></tr>
+        <tr><td>Invoice Orig Freight</td><td><code>custcol_f3_inv_orig_freight</code></td><td>Currency</td><td>Original freight amount before redistribution</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== CUSTOMER ENTITY ===== -->
+  <div class="card">
+    <h2>Customer Entity Fields</h2>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Default Margin %</td><td><code>custentity_f3_default_margin_pct</code></td><td>Percent</td><td>Fallback EXW margin when no Customer Item Margin record exists</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr style="border:none;border-top:2px solid var(--border);margin:2rem 0">
+
+  <!-- ===== UNIT CONVERSION RECORDS ===== -->
+  <div class="card">
+    <h2>Unit Conversion Fields (on FIFO Layer)</h2>
+    <p class="card-desc">Stored on each FIFO layer for metric ↔ imperial conversion</p>
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>ID</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>IUC (Import Unit Cost)</td><td><code>custrecord_f3_iuc</code></td><td>Currency</td><td>Cost in import unit (metric ton)</td></tr>
+        <tr><td>MUC (Metric Unit Cost)</td><td><code>custrecord_f3_muc</code></td><td>Currency</td><td>Cost in metric unit</td></tr>
+        <tr><td>SLK ($/lb Conversion)</td><td><code>custrecord_f3_slk</code></td><td>Currency</td><td>LME metric ton → $/lb conversion factor</td></tr>
+        <tr><td>TUC (Total Unit Cost)</td><td><code>custrecord_f3_tuc</code></td><td>Currency</td><td>Total unit cost after conversion</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
   <div class="card">
     <h2>Scripts Deployed</h2>
     <table class="field-table">
       <thead><tr><th>Script</th><th>Type</th><th>Record</th><th>File</th></tr></thead>
       <tbody>
         <tr><td>SO Aluminum Calc</td><td>User Event</td><td>Sales Order</td><td><code>f3_so_alu_calc_ue.js</code></td></tr>
+        <tr><td>Invoice Aluminum Calc</td><td>User Event</td><td>Invoice</td><td><code>f3_invoice_alu_calc_ue.js</code></td></tr>
+        <tr><td>Estimate Aluminum Calc</td><td>User Event</td><td>Estimate</td><td><code>f3_estimate_alu_calc_ue.js</code></td></tr>
         <tr><td>PO Customization</td><td>User Event</td><td>Purchase Order</td><td><code>f3_po_customization_ue.js</code></td></tr>
         <tr><td>IR Customization</td><td>User Event</td><td>Item Receipt</td><td><code>f3_item_receipt_customization_ue.js</code></td></tr>
         <tr><td>Container UE</td><td>User Event</td><td>Container</td><td><code>f3_al_container_ue.js</code></td></tr>
         <tr><td>Container CS</td><td>Client Script</td><td>Container</td><td><code>f3_al_container_cs.js</code></td></tr>
         <tr><td>Distribute Freight</td><td>Suitelet</td><td>—</td><td><code>f3_al_container_distribute.js</code></td></tr>
+        <tr><td>Release Reservations</td><td>Scheduled Script</td><td>—</td><td><code>f3_al_release_reservations_ss.js</code></td></tr>
+        <tr><td>Pricing Library</td><td>Module (SuiteScript)</td><td>—</td><td><code>f3_al_pricing_lib.js</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== CUSTOM LISTS ===== -->
+  <div class="card">
+    <h2>Custom List Values</h2>
+    <p class="card-desc">List/dropdown values used across the system</p>
+    <table class="field-table">
+      <thead><tr><th>List</th><th>Values</th><th>Used On</th></tr></thead>
+      <tbody>
+        <tr><td>Aluminum Type (Duty)</td><td>Solid (5%) · Hollow (1.5%) · Fabricated (5.7%) · <span class="cond cond-new">Other Profile (5%)</span></td><td><code>custitem_f3_al_type</code></td></tr>
+        <tr><td>Container Status</td><td>Open · In Transit · Received · Closed</td><td><code>custrecord_f3_cnt_status</code></td></tr>
+        <tr><td>Shortfall Status</td><td>Open · Resolved</td><td><code>custrecord_f3_sf_status</code></td></tr>
       </tbody>
     </table>
   </div>
